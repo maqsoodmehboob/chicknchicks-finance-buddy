@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/Modal';
 import { StatusBadge } from '@/components/StatusBadge';
 import { mockLoans } from '@/lib/mock-data';
-import { Loan } from '@/lib/types';
+import { Loan, LoanType } from '@/lib/types';
 import { formatPKR, formatDate } from '@/lib/formatters';
 import { toast } from 'sonner';
 
@@ -14,7 +14,9 @@ export default function Loans() {
   const [showForm, setShowForm] = useState(false);
   const [paymentModal, setPaymentModal] = useState<Loan | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
+  const [activeTab, setActiveTab] = useState<LoanType>('taken');
 
+  const [loanType, setLoanType] = useState<LoanType>('taken');
   const [source, setSource] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
   const [interest, setInterest] = useState('');
@@ -28,6 +30,7 @@ export default function Loans() {
     const total = parseFloat(totalAmount);
     const newLoan: Loan = {
       id: Date.now().toString(),
+      type: loanType,
       source,
       total_amount: total,
       paid_amount: 0,
@@ -59,7 +62,7 @@ export default function Loans() {
     }));
     setPaymentModal(null);
     setPaymentAmount('');
-    toast.success('Loan payment recorded');
+    toast.success('Payment recorded');
   };
 
   const handleDelete = (id: string) => {
@@ -68,9 +71,58 @@ export default function Loans() {
     toast.success('Deleted');
   };
 
+  const filteredLoans = loans.filter(l => l.type === activeTab);
+
+  const renderTable = (items: Loan[], typeLabel: string) => (
+    <div className="bg-card rounded-lg border overflow-x-auto">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>{activeTab === 'taken' ? 'Lender' : 'Borrower'}</th>
+            <th>Total Amount</th>
+            <th>Paid</th>
+            <th>Remaining</th>
+            <th>Interest</th>
+            <th>Next Installment</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map(l => (
+            <tr key={l.id}>
+              <td className="font-medium">{l.source}</td>
+              <td>{formatPKR(l.total_amount)}</td>
+              <td>{formatPKR(l.paid_amount)}</td>
+              <td>{formatPKR(l.remaining_amount)}</td>
+              <td>{l.interest}%</td>
+              <td>{formatDate(l.installment_date)}</td>
+              <td><StatusBadge status={l.status} /></td>
+              <td>
+                <div className="flex gap-1">
+                  {l.status === 'Active' && (
+                    <Button size="sm" variant="outline" onClick={() => setPaymentModal(l)} className="gap-1 text-xs">
+                      <CreditCard className="w-3 h-3" /> Pay
+                    </Button>
+                  )}
+                  <Button size="sm" variant="ghost" onClick={() => handleDelete(l.id)}>
+                    <Trash2 className="w-3 h-3 text-destructive" />
+                  </Button>
+                </div>
+              </td>
+            </tr>
+          ))}
+          {items.length === 0 && (
+            <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">No {typeLabel} loans yet</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <h2 className="page-title lg:hidden">Loans</h2>
         <Button onClick={() => setShowForm(!showForm)} className="gap-2">
           <Plus className="w-4 h-4" /> Add Loan
@@ -80,8 +132,16 @@ export default function Loans() {
       {showForm && (
         <form onSubmit={handleSubmit} className="form-section grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium text-foreground mb-1 block">Lender / Source</label>
-            <Input value={source} onChange={(e) => setSource(e.target.value)} placeholder="Bank or lender name" required />
+            <label className="text-sm font-medium text-foreground mb-1 block">Loan Type</label>
+            <select value={loanType} onChange={(e) => setLoanType(e.target.value as LoanType)}
+              className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm focus:ring-2 focus:ring-ring">
+              <option value="taken">Loan Taken (Hum ne liya)</option>
+              <option value="given">Loan Given (Hum ne diya)</option>
+            </select>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground mb-1 block">{loanType === 'taken' ? 'Lender / Source' : 'Borrower Name'}</label>
+            <Input value={source} onChange={(e) => setSource(e.target.value)} placeholder={loanType === 'taken' ? 'Bank or lender name' : 'Person or business name'} required />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground mb-1 block">Total Amount (PKR)</label>
@@ -95,7 +155,7 @@ export default function Loans() {
             <label className="text-sm font-medium text-foreground mb-1 block">Installment Date</label>
             <Input type="date" value={installmentDate} onChange={(e) => setInstallmentDate(e.target.value)} />
           </div>
-          <div className="sm:col-span-2">
+          <div>
             <label className="text-sm font-medium text-foreground mb-1 block">Notes</label>
             <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Purpose, terms, etc." />
           </div>
@@ -106,50 +166,23 @@ export default function Loans() {
         </form>
       )}
 
-      <div className="bg-card rounded-lg border overflow-x-auto">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Source</th>
-              <th>Total Amount</th>
-              <th>Paid</th>
-              <th>Remaining</th>
-              <th>Interest</th>
-              <th>Next Installment</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loans.map(l => (
-              <tr key={l.id}>
-                <td className="font-medium">{l.source}</td>
-                <td>{formatPKR(l.total_amount)}</td>
-                <td>{formatPKR(l.paid_amount)}</td>
-                <td>{formatPKR(l.remaining_amount)}</td>
-                <td>{l.interest}%</td>
-                <td>{formatDate(l.installment_date)}</td>
-                <td><StatusBadge status={l.status} /></td>
-                <td>
-                  <div className="flex gap-1">
-                    {l.status === 'Active' && (
-                      <Button size="sm" variant="outline" onClick={() => setPaymentModal(l)} className="gap-1 text-xs">
-                        <CreditCard className="w-3 h-3" /> Pay
-                      </Button>
-                    )}
-                    <Button size="sm" variant="ghost" onClick={() => handleDelete(l.id)}>
-                      <Trash2 className="w-3 h-3 text-destructive" />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {loans.length === 0 && (
-              <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">No loans yet</td></tr>
-            )}
-          </tbody>
-        </table>
+      {/* Tabs */}
+      <div className="flex gap-1 border-b border-border">
+        <button
+          onClick={() => setActiveTab('taken')}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'taken' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+        >
+          Loans Taken ({loans.filter(l => l.type === 'taken').length})
+        </button>
+        <button
+          onClick={() => setActiveTab('given')}
+          className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'given' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+        >
+          Loans Given ({loans.filter(l => l.type === 'given').length})
+        </button>
       </div>
+
+      {renderTable(filteredLoans, activeTab)}
 
       <Modal open={!!paymentModal} onClose={() => setPaymentModal(null)} title="Record Loan Payment">
         {paymentModal && (
