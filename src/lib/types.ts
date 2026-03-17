@@ -38,6 +38,9 @@ export interface Asset {
   category: AssetCategory;
   purchase_date: string;
   purchase_price: number;
+  paid_amount: number;
+  remaining_amount: number;
+  status: PaymentStatus;
   bill_image?: string;
   notes?: string;
   created_at?: string;
@@ -45,6 +48,7 @@ export interface Asset {
 
 export interface Loan {
   id: string;
+  type: LoanType;
   source: string;
   total_amount: number;
   paid_amount: number;
@@ -70,6 +74,7 @@ export type Department = 'Kitchen' | 'Waitstaff' | 'Management' | 'Cleaning' | '
 export type AssetCategory = 'Kitchen Equipment' | 'Furniture' | 'Vehicles' | 'Utensils';
 export type PaymentStatus = 'Fully Paid' | 'Partially Paid' | 'Pending';
 export type LoanStatus = 'Active' | 'Cleared';
+export type LoanType = 'taken' | 'given';
 
 export const EXPENSE_CATEGORIES: ExpenseCategory[] = ['Vegetables', 'Meat', 'Utilities', 'Rent', 'Transport', 'Miscellaneous'];
 export const DEPARTMENTS: Department[] = ['Kitchen', 'Waitstaff', 'Management', 'Cleaning', 'Other'];

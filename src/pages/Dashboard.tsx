@@ -1,19 +1,51 @@
 import { useState } from 'react';
-import { DollarSign, TrendingUp, Users, Landmark } from 'lucide-react';
+import { DollarSign, TrendingUp, Users, Landmark, CalendarIcon } from 'lucide-react';
 import { MetricCard } from '@/components/MetricCard';
 import { mockDashboard } from '@/lib/mock-data';
 import { formatPKR } from '@/lib/formatters';
-import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
 const CHART_COLORS = ['#14B8A6', '#F59E0B', '#EF4444', '#6366F1', '#8B5CF6', '#EC4899'];
 
 export default function Dashboard() {
   const data = mockDashboard;
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+
+  const handleFilter = () => {
+    // In real app this would filter API data by date range
+  };
+
+  const handleClear = () => {
+    setFromDate('');
+    setToDate('');
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Mobile title */}
       <h2 className="page-title lg:hidden">Dashboard</h2>
+
+      {/* Date Range Filter */}
+      <div className="bg-card rounded-lg border p-4">
+        <div className="flex flex-wrap items-end gap-3">
+          <div>
+            <label className="text-sm font-medium text-foreground mb-1 block">From Date</label>
+            <Input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} className="w-44" />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground mb-1 block">To Date</label>
+            <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} className="w-44" />
+          </div>
+          <Button onClick={handleFilter} className="gap-2">
+            <CalendarIcon className="w-4 h-4" /> Filter
+          </Button>
+          {(fromDate || toDate) && (
+            <Button variant="outline" onClick={handleClear}>Clear</Button>
+          )}
+        </div>
+      </div>
 
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -45,7 +77,6 @@ export default function Dashboard() {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Pie Chart */}
         <div className="bg-card rounded-lg border p-6">
           <h3 className="font-heading text-lg font-semibold mb-4">Expense Breakdown</h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -68,7 +99,6 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
 
-        {/* Line Chart */}
         <div className="bg-card rounded-lg border p-6">
           <h3 className="font-heading text-lg font-semibold mb-4">Monthly Expense Trend</h3>
           <ResponsiveContainer width="100%" height={300}>

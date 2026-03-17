@@ -18,16 +18,18 @@ export const mockSalaries: Salary[] = [
 ];
 
 export const mockAssets: Asset[] = [
-  { id: '1', name: 'Commercial Oven', category: 'Kitchen Equipment', purchase_date: '2025-06-15', purchase_price: 350000, notes: 'Industrial grade, 2-year warranty' },
-  { id: '2', name: 'Dining Tables (Set of 10)', category: 'Furniture', purchase_date: '2025-01-20', purchase_price: 200000, notes: 'Wooden tables for main hall' },
-  { id: '3', name: 'Delivery Bike', category: 'Vehicles', purchase_date: '2025-09-01', purchase_price: 180000, notes: 'Honda 125 for deliveries' },
-  { id: '4', name: 'Cutlery Set (200 pcs)', category: 'Utensils', purchase_date: '2025-03-10', purchase_price: 45000, notes: 'Stainless steel set' },
+  { id: '1', name: 'Commercial Oven', category: 'Kitchen Equipment', purchase_date: '2025-06-15', purchase_price: 350000, paid_amount: 350000, remaining_amount: 0, status: 'Fully Paid', notes: 'Industrial grade, 2-year warranty' },
+  { id: '2', name: 'Dining Tables (Set of 10)', category: 'Furniture', purchase_date: '2025-01-20', purchase_price: 200000, paid_amount: 100000, remaining_amount: 100000, status: 'Partially Paid', notes: 'Wooden tables for main hall' },
+  { id: '3', name: 'Delivery Bike', category: 'Vehicles', purchase_date: '2025-09-01', purchase_price: 180000, paid_amount: 0, remaining_amount: 180000, status: 'Pending', notes: 'Honda 125 for deliveries' },
+  { id: '4', name: 'Cutlery Set (200 pcs)', category: 'Utensils', purchase_date: '2025-03-10', purchase_price: 45000, paid_amount: 45000, remaining_amount: 0, status: 'Fully Paid', notes: 'Stainless steel set' },
 ];
 
 export const mockLoans: Loan[] = [
-  { id: '1', source: 'HBL Bank', total_amount: 2000000, paid_amount: 800000, remaining_amount: 1200000, installment_date: '2026-04-01', interest: 12.5, status: 'Active', notes: 'Restaurant renovation loan' },
-  { id: '2', source: 'Uncle Rashid', total_amount: 500000, paid_amount: 500000, remaining_amount: 0, installment_date: '2026-01-15', interest: 0, status: 'Cleared', notes: 'Family loan for initial setup' },
-  { id: '3', source: 'MCB Bank', total_amount: 800000, paid_amount: 200000, remaining_amount: 600000, installment_date: '2026-03-25', interest: 14, status: 'Active', notes: 'Kitchen equipment financing' },
+  { id: '1', type: 'taken', source: 'HBL Bank', total_amount: 2000000, paid_amount: 800000, remaining_amount: 1200000, installment_date: '2026-04-01', interest: 12.5, status: 'Active', notes: 'Restaurant renovation loan' },
+  { id: '2', type: 'taken', source: 'Uncle Rashid', total_amount: 500000, paid_amount: 500000, remaining_amount: 0, installment_date: '2026-01-15', interest: 0, status: 'Cleared', notes: 'Family loan for initial setup' },
+  { id: '3', type: 'taken', source: 'MCB Bank', total_amount: 800000, paid_amount: 200000, remaining_amount: 600000, installment_date: '2026-03-25', interest: 14, status: 'Active', notes: 'Kitchen equipment financing' },
+  { id: '4', type: 'given', source: 'Ali (Staff)', total_amount: 50000, paid_amount: 20000, remaining_amount: 30000, installment_date: '2026-04-10', interest: 0, status: 'Active', notes: 'Advance salary loan to staff' },
+  { id: '5', type: 'given', source: 'Supplier - Fresh Farms', total_amount: 100000, paid_amount: 100000, remaining_amount: 0, installment_date: '2026-02-01', interest: 0, status: 'Cleared', notes: 'Advance payment to supplier' },
 ];
 
 export const mockDashboard: DashboardData = {

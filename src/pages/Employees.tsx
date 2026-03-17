@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash2, CreditCard } from 'lucide-react';
+import { Plus, Trash2, CreditCard, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/Modal';
@@ -52,6 +52,15 @@ export default function Employees() {
     setPaymentModal(null);
     setPaymentAmount('');
     toast.success('Salary payment recorded');
+  };
+
+  const handleReset = (id: string) => {
+    if (!confirm('Reset salary payment for this employee? Paid amount will be set to 0.')) return;
+    setSalaries(salaries.map(s => {
+      if (s.id !== id) return s;
+      return { ...s, paid_amount: 0, remaining_salary: s.total_salary, payment_date: undefined };
+    }));
+    toast.success('Salary reset for new month');
   };
 
   const handleDelete = (id: string) => {
@@ -128,6 +137,9 @@ export default function Employees() {
                         <CreditCard className="w-3 h-3" /> Pay
                       </Button>
                     )}
+                    <Button size="sm" variant="outline" onClick={() => handleReset(s.id)} className="gap-1 text-xs" title="Reset for new month">
+                      <RotateCcw className="w-3 h-3" />
+                    </Button>
                     <Button size="sm" variant="ghost" onClick={() => handleDelete(s.id)}>
                       <Trash2 className="w-3 h-3 text-destructive" />
                     </Button>
