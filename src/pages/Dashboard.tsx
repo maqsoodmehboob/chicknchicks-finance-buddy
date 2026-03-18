@@ -81,6 +81,7 @@ export default function Dashboard() {
           <h3 className="font-heading text-lg font-semibold mb-4">Expense Breakdown</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
+              {/* @ts-ignore */}
               <Pie
                 data={data.expense_by_category}
                 dataKey="amount"
