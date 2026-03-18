@@ -16,6 +16,7 @@ export default function Assets() {
   const [imageModal, setImageModal] = useState<string | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState<AssetCategory>('Kitchen Equipment');
