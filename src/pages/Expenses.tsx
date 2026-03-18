@@ -17,6 +17,7 @@ export default function Expenses() {
   const [paymentAmount, setPaymentAmount] = useState('');
   const [showAll, setShowAll] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   // Form state
   const [category, setCategory] = useState<ExpenseCategory>('Vegetables');
