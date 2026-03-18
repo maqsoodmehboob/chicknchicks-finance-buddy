@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Plus, Trash2, CreditCard, Eye, ImageIcon } from 'lucide-react';
+import { Plus, Trash2, CreditCard, Eye, ImageIcon, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/Modal';
@@ -16,6 +16,7 @@ export default function Assets() {
   const [imageModal, setImageModal] = useState<string | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState<AssetCategory>('Kitchen Equipment');
@@ -132,9 +133,13 @@ export default function Assets() {
               <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} className="gap-1">
                 <ImageIcon className="w-4 h-4" /> Choose File
               </Button>
+              <Button type="button" variant="outline" size="sm" onClick={() => cameraInputRef.current?.click()} className="gap-1">
+                <Camera className="w-4 h-4" /> Take Picture
+              </Button>
               <span className="text-xs text-muted-foreground truncate max-w-[150px]">{billFileName || 'No file chosen'}</span>
             </div>
             <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleImageChange} className="hidden" />
             {billImage && (
               <img src={billImage} alt="Preview" className="mt-2 w-24 h-24 object-cover rounded border" />
             )}
