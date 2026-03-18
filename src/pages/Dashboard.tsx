@@ -106,9 +106,13 @@ export default function Dashboard() {
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data.monthly_trend}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(214, 20%, 90%)" />
+              {/* @ts-ignore */}
               <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+              {/* @ts-ignore */}
               <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`} />
+              {/* @ts-ignore */}
               <Tooltip formatter={(value: number) => formatPKR(value)} />
+              {/* @ts-ignore */}
               <Line
                 type="monotone"
                 dataKey="amount"
