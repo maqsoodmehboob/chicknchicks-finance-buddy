@@ -95,6 +95,7 @@ export default function Dashboard() {
                   <Cell key={idx} fill={CHART_COLORS[idx % CHART_COLORS.length]} />
                 ))}
               </Pie>
+              {/* @ts-ignore */}
               <Tooltip formatter={(value: number) => formatPKR(value)} />
             </PieChart>
           </ResponsiveContainer>
