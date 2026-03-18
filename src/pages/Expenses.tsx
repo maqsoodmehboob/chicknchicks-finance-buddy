@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Plus, Eye, Trash2, CreditCard, ImageIcon } from 'lucide-react';
+import { Plus, Eye, Trash2, CreditCard, ImageIcon, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/Modal';
